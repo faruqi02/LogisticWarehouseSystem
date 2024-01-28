@@ -1,0 +1,149 @@
+{% extends "sidebar.html"%}
+
+{% block title %}
+	Dashboard | Manager
+{% endblock %}
+
+{% block style %}
+<style>
+	.box{
+		border:5px solid black;
+		margin-left: 50px;
+		margin-right: 50px;
+		margin-bottom: 25px;
+		text-align: center;
+	}
+</style>
+{% endblock %}
+
+{% block pagetitle %}
+	Manager Dashboard
+{% endblock%}
+
+{% block content %}
+<head>
+	<div class="container-dashboard">
+		<div class="box">
+			<h1>Reorder</h1>
+			<table border='1'>
+				<tr>
+					<th>ID</th>
+					<th>Product Name</th>
+					<th>Content</th>
+					<th>Quantity</th>
+					<th>Barcode</th>
+					<th>Barcode Image</th>
+					<th colspan="2" id="mid">Action</th>
+				</tr>
+			  	{% for x in notification %}
+			    <tr>
+					<td>{{ x.id }}</td>
+					<td>{{ x.productName }}</td>
+					<td>{{ x.notificationContent }}</td>
+					<td>{{ x.quantity }}</td>
+					<td>{{ x.barcode }}</td>
+					<td><img class="barcode-image" alt="Barcode Image" data-barcode="{{ x.barcode }}"></td> 
+		            <td><a href="update/{{x.id}}"><button id="up">update</button></a></td>
+		            <td><a href="delete/{{x.id}}"><button id="del">delete</button></a></td>     
+			    </tr>
+			  	{% endfor %}
+			</table>
+			<br><br>
+      		<a href="{% url 'add' %}"><button id="new3">Reorder</button></a>
+		</div>
+
+		<div class="box">		
+			<h1>Package Movement</h1>
+			<table border='1'>
+				  <tr>
+					<th>ID</th>		
+					<th>Barcode</th>
+					<th>Barcode Image</th>
+					<th>Out Bound Date</th>
+					<th>Receive Date</th>
+				  </tr>
+				  {% for x in packagelog %}
+				    <tr>
+					  <td>{{ x.id }}</td>					  
+					  <td>{{ x.barcode }}</td>
+					  <td><img class="barcode-image" alt="Barcode Image" data-barcode="{{ x.barcode }}"></td> 
+					  <td>{{ x.outboundDate }}<br>{{x.outboundTime}}</td>
+					  <td>{{ x.receivedDate }}<br>{{x.receivedTime}}</td> 
+				    </tr>
+				  {% endfor %}
+			</table>
+		</div>
+
+		<div class="box">		
+			<h1>Inventory</h1>
+			<table border='1'>
+				<tr>
+					<th>ID</th>
+					<th>Product Name</th>
+					<th>Quantity</th>
+					<th>Price</th>
+					<th colspan="2" id="mid">Action</th>
+				</tr>
+			  	{% for x in inventory %}
+			    <tr>
+					<td>{{ x.id }}</td>
+					<td>{{ x.productName}}</td>
+					<td>{{ x.quantity }}</td>
+					<td>{{ x.price }}</td>
+		            <td><a href="update-inventory/{{x.id}}"><button id="up">update</button></a></td>
+		            <td><a href="delete-inventory/{{x.id}}"><button id="del">delete</button></a></td>   
+			    </tr>
+			  	{% endfor %}				
+			</table>
+		</div>
+
+		<div class="box">		
+			<h1>Gain/Loss</h1>
+		</div>
+		<div class="box">		
+			<h1>All Barcode Database</h1>
+			<table border='1'>
+				<tr>
+					<th>ID</th>
+					<th>Barcode</th>
+					<th>Barcode Image</th>
+				</tr>
+			  	{% for x in barcode %}
+			    <tr>
+					<td>{{ x.id }}</td>
+					<td>{{ x.barcode}}</td>
+ 					<td><img class="barcode-image" alt="Barcode Image" data-barcode="{{ x.barcode }}"></td> 
+			    </tr>
+			  	{% endfor %}				
+			</table>
+		</div>
+	</div>
+</head>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.code128.min.js"></script>
+<script>
+    function generateBarcode() {
+        // Find all elements with the class "barcode-image"
+        var barcodeImages = document.getElementsByClassName('barcode-image');
+
+        // Loop through each barcode image element
+        for (var i = 0; i < barcodeImages.length; i++) {
+            var barcodeElement = barcodeImages[i];
+            var barcodeValue = barcodeElement.getAttribute('data-barcode');
+
+            // Generate barcode for each element
+            JsBarcode(barcodeElement, barcodeValue, {
+                format: "CODE128",
+                displayValue: true
+            });
+        }
+    }
+
+    // Call the function when the document is ready
+    document.addEventListener("DOMContentLoaded", function () {
+        generateBarcode();
+    });
+</script>
+{% endblock%}
